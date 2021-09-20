@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from PySimpleGUI.PySimpleGUI import WIN_CLOSED
-import login, error
+import app, error
 def validate(window, values):
     """
     Validates the username and password during registration
@@ -76,8 +76,8 @@ def window():
         if event == 'Back':
             window.close()
 
-            # Back to login window
-            login.window()
+            # Back to app window
+            app.mainloop()
 
         if event == 'Submit':
             # validate registration
@@ -86,7 +86,7 @@ def window():
             if not 'Failed' == result:
                 # go to login window
                 window.close()
-                login.window()
+                app.mainloop()
 
 
     window.close()

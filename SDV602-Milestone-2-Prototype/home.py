@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from PySimpleGUI.PySimpleGUI import WIN_CLOSED
-import login, dataExplorer
+import app, dataExplorer
 
 def window_close(home_window):
     """
@@ -11,9 +11,9 @@ def window_close(home_window):
         home_window (obj): the home window
     """
     home_window.close()
-    login.window()
+    app.mainloop()
 
-def window(credentials={}):
+def window(appModel):
     """
     This is the home window.
     Navigation to the data explorer screen happens here.
@@ -22,7 +22,7 @@ def window(credentials={}):
     Args:
         credentials (dict): 'username':<username>,'password':<password>
     """
-    layout = [  [sg.Column([[sg.Text(f'Welcome, {credentials["username"]}')]],justification='l',expand_x=True),sg.Column([[sg.B('Logout')]],justification='r')],
+    layout = [  [sg.Column([[sg.Text(f'Welcome, {appModel.username}')]],justification='l',expand_x=True),sg.Column([[sg.B('Logout')]],justification='r')],
                 [sg.Text('What do you want to do?', size=(30, 1), justification='center', font=("Helvetica", 25))],
                 [sg.Column([
                     [sg.Text('Explore:')],

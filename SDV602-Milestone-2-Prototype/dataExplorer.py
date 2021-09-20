@@ -3,6 +3,10 @@ from PySimpleGUI.PySimpleGUI import Output
 import home, matplotlibGraphsAndCharts
 from icons import minus20x20, plus20x20
 
+class Model:
+    filepath = ""
+    pass
+
 
 def window(key='', home_window=sg.Window('')):
     """
