@@ -13,41 +13,72 @@ class FileModel:
     data_dict = []
 
     def upload(self):
+        # TODO wrap in try except
         # upload the file to local storage from source
+        try:
+            if self.source != "":
+                # get file name
+                dest_filename = os.path.basename(self.source)
 
-        if self.source != "":
+                # combine path and filename
+                self.dest = self.dest_path + dest_filename
 
-            # get file name
-            dest_filename = os.path.basename(self.source)
+                # copy from source path to local path in project dir
+                shutil.copy(self.source, self.dest)
 
-            # combine path and filename
-            self.dest = self.dest_path + dest_filename
+        except Exception as e:
+            print(e)
 
-            # copy from source path to local path in project dir
-            shutil.copy(self.source, self.dest)
+    def merge(self):
 
-    def merge(self, has_header=True):
-        """
-            Credit: Todd
-        """
-        # open the target file for appending
-        target_file_obj = open(self.target,'a')
+        try:
+            # read csv files with the source supplied
+            def readCSVFile(path, isTargetFile):
+                with open(path) as csvfile:
+                    header = []
+                    lines = []
+                    reader = csv.reader(csvfile)
 
-        # open the source file for reading
-        source_file_obj = open(self.source,'r')
+                    # if target file, use header
+                    if isTargetFile:
+                        header = next(reader)
+                    else:
+                        next(reader)
 
-        lines = source_file_obj.readlines()
-        
-        if has_header:
-            lines = lines[1:]
+                    # read line by line and append to list
+                    for line in reader:
+                        lines.append(line)
 
-        target_file_obj.writelines(lines)
+                return header, lines
 
-        # close files
-        target_file_obj.close()
-        source_file_obj.close()
+            # read csv files and get lines and headers
+            target_header, target_lines = readCSVFile(self.target, True)
+            source_header, source_lines = readCSVFile(self.source, False)
 
+            # combine the lines
+            lines = target_lines + source_lines
 
+            # name the file as the target file and point to local storage path
+            des_filename = self.dest_path + os.path.basename(self.target)
+
+            # write the new merged csv file to the local storage path
+            with open(des_filename, 'w', encoding='UTF8', newline='') as f:
+                # use csv library to write file
+                writer = csv.writer(f)
+
+                # write header
+                writer.writerow(target_header)
+
+                # write rows
+                writer.writerows(lines)
+
+            # assign the file path to the dest variable in model
+            self.dest = des_filename
+
+            return self.dest
+
+        except Exception as e:
+            print(e)
 
     def getPieChartDataFromFile(self, source):
         pieDict = {}

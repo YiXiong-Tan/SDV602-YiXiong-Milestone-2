@@ -7,7 +7,7 @@ import PySimpleGUI as sg
 
 class FileUploadController:
 
-    def __init__(self, view: FileUploadView, model: FileModel()):
+    def __init__(self, view: FileUploadView, model: FileModel):
         self.view = view
         self.model = model
 

@@ -1,3 +1,4 @@
+from pages.FileOptions.file_model import FileModel
 from PySimpleGUI.PySimpleGUI import WINDOW_CLOSED
 from pages.FileOptions.file_merge_view import FileMergeView
 import utils.fileOps as fileOps
@@ -6,16 +7,15 @@ import PySimpleGUI as sg
 
 class FileMergeController:
 
-    def __init__(self, view: FileMergeView):
+    def __init__(self, view: FileMergeView, model: FileModel):
         self.view = view
+        self.model = model
 
     def load(self):
 
         while True:
             event, values = self.view.window.read()
-            # pop when merge complete
-            print(event)
-
+            
             if event == "Exit" or event == sg.WINDOW_CLOSED:
                 break
 
@@ -23,13 +23,14 @@ class FileMergeController:
                 choice = sg.PopupOKCancel("Confirm merge?")
                 if choice == "OK":
                     # TODO merge the files
-                    source = values["source"]
-                    target = values["target"]
-                    fileOps.merge(source, target)
-                    
-                    # TODO store to data
-                    
+                    self.model.source = values["source"]
+                    self.model.target = values["target"]
 
-                    sg.Popup("Merge Successful")
+                    self.model.merge()
+
+                    if self.model.dest != "":
+                        sg.Popup("Merge Successful")
+                        break
 
         self.view.window.close()
+        return self.model.dest

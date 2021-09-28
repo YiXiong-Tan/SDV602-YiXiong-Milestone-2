@@ -11,8 +11,8 @@ def uploadPopUp():
 
 
 def mergePopUp():
-    file = FileMergeController(FileMergeView())
-    file.load()
+    file = FileMergeController(FileMergeView(), FileModel())
+    return file.load()
 
 def getPieChartDataFromFile(source):
     fileModel = FileModel()
