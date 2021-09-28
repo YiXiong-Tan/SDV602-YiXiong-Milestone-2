@@ -1,8 +1,7 @@
 from pages.DES.des_model import DESModel
 from pages.DES.des_view import DESView
 import PySimpleGUI as sg
-import matplotlibGraphsAndCharts
-from icons import minus20x20, plus20x20
+import utils.matplotlibGraphsAndCharts as plotter
 
 
 class DESController:
@@ -28,7 +27,7 @@ class DESController:
                 self.model.data_path)
 
             # update canvas
-            matplotlibGraphsAndCharts.drawPieChart(
+            plotter.drawPieChart(
                 self.view.window, self.model.pieDataDict)
 
         while True:

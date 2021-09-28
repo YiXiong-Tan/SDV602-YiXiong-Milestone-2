@@ -6,13 +6,14 @@ from pages.FileOptions.file_upload_controller import FileUploadController
 
 
 def uploadPopUp():
-    file = FileUploadController(FileUploadView(),FileModel())
+    file = FileUploadController(FileUploadView(), FileModel())
     return file.load()
 
 
 def mergePopUp():
     file = FileMergeController(FileMergeView(), FileModel())
     return file.load()
+
 
 def getPieChartDataFromFile(source):
     fileModel = FileModel()
