@@ -1,9 +1,13 @@
-from model.appModel import *
-from view.appView import *
-from controller.appController import *
-
+import PySimpleGUI as sg
 
 if __name__ == "__main__":
-    c = appController(appModel(), appView())
-    c.run()
- 
+
+    sg.theme("DarkAmber")
+    # from pages.login import LoginPage
+    # login = LoginPage()
+    # login.load()
+
+    from pages.home import HomePage
+
+    home = HomePage("Ian")
+    home.load() 

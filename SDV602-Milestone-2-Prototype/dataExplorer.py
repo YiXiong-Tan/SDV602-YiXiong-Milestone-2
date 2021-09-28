@@ -1,11 +1,6 @@
 import PySimpleGUI as sg
-from PySimpleGUI.PySimpleGUI import Output
-import home, matplotlibGraphsAndCharts
+import matplotlibGraphsAndCharts
 from icons import minus20x20, plus20x20
-
-class Model:
-    filepath = ""
-    pass
 
 
 def window(key='', home_window=sg.Window('')):
@@ -86,7 +81,7 @@ def window(key='', home_window=sg.Window('')):
 
             # when loging out, close the home window as well
             if event == 'Logout':
-                home.window_close(home_window)
+                home_window.window_close()
 
             break
 

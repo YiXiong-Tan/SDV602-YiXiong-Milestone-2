@@ -72,7 +72,7 @@ def bar_graph(window):
     # add the plot to the window
     fig_canvas_agg = draw_figure(window['-CANVAS-'].TKCanvas, fig)
 
-def pie_chart(window):
+def drawPieChart(window, pieDataDict:dict):
     """
     Plots a simple pie chart on the window provided.
     
@@ -80,12 +80,15 @@ def pie_chart(window):
         window (module): window where the graph is to be plotted
     """
     # Pie chart, where the slices will be ordered and plotted counter-clockwise:
-    labels = 'Frogs', 'Hogs', 'Dogs', 'Logs'
-    sizes = [15, 30, 45, 10]
-    explode = (0, 0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
+    labels = list(pieDataDict.keys())
+    sizes = [count/sum(pieDataDict.values())*100 for count in pieDataDict.values()]
+    #explode = (0, 0.1, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
+
+    print(labels)
+    print(sizes)
 
     fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
+    ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
             shadow=True, startangle=90)
     ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 

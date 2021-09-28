@@ -1,3 +1,0 @@
-class appModel:
-    username = ""
-    password = ""
