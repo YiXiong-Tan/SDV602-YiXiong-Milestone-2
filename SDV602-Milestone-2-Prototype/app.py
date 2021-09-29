@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+from pages.home import HomePage
 
 if __name__ == "__main__":
 
@@ -7,7 +8,5 @@ if __name__ == "__main__":
     # login = LoginPage()
     # login.load()
 
-    from pages.home import HomePage
-
     home = HomePage("Ian")
-    home.load() 
+    home.load()

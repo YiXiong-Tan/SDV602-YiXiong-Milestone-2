@@ -5,12 +5,14 @@ import csv
 
 
 class FileModel:
+    des_selected = ""
     source = ""
     target = ""
     dest_path = os.path.join(os.path.dirname(
         os.path.abspath("data"))+"\\data\\")
     dest = ""
     data_dict = []
+
 
     def upload(self):
         # TODO wrap in try except
@@ -28,6 +30,7 @@ class FileModel:
 
         except Exception as e:
             print(e)
+
 
     def merge(self):
 
@@ -80,18 +83,55 @@ class FileModel:
         except Exception as e:
             print(e)
 
+
     def getPieChartDataFromFile(self, source):
         pieDict = {}
-        # pieDataDict = {'label':['a', 'b', 'c'], percentages:[]}
+
         # read file
         with open(source, newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 fire_type = row['FIRE_TYPE']
-                if row['FIRE_TYPE'] != "":
+                if fire_type != "":
                     if fire_type in pieDict.keys():
                         pieDict[fire_type] += 1
                     else:
                         pieDict[fire_type] = 1
 
         return pieDict
+
+
+    def getBarGraphDataFromFile(self, source):
+        from datetime import datetime
+
+        barDict = {}
+        # read csv file
+        with open(source, newline="") as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                date = row['IG_DATE']
+                if date != "":
+
+                    # remove the +00 at the back of the date
+                    date_time_str = date.split("+")[0]
+
+                    # break down the date
+                    date_time_obj = datetime.strptime(
+                        date_time_str, '%Y/%m/%d %H:%M:%S')
+
+                    # combine year and month eg. 01/2015
+                    month_year = str(date_time_obj.month) + \
+                        "/"+str(date_time_obj.year)
+
+                    # count amount of fires on month
+                    if month_year in barDict.keys():
+                        barDict[month_year] += 1
+                    else:
+                        barDict[month_year] = 1
+
+                    # sort the dict
+                    sorted_bar_dict = {}
+                    for i in sorted(barDict):
+                        sorted_bar_dict[i] = barDict[i]
+
+        return sorted_bar_dict

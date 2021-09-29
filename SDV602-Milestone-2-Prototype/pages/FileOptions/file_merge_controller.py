@@ -1,7 +1,6 @@
 from pages.FileOptions.file_model import FileModel
 from PySimpleGUI.PySimpleGUI import WINDOW_CLOSED
 from pages.FileOptions.file_merge_view import FileMergeView
-import utils.fileOps as fileOps
 import PySimpleGUI as sg
 
 

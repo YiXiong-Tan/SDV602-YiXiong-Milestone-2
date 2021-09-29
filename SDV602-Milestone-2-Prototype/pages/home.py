@@ -19,9 +19,9 @@ class HomePage():
                                 justification='center', font=("Helvetica", 25))],
                        [sg.Column([
                            [sg.Text('Explore:')],
-                           [sg.Button('DES 1', k='key1')],
-                           [sg.Button('DES 2', k='key2')],
-                           [sg.Button('DES 3', k='key3')]
+                           [sg.Button('DES 1', k='des1')],
+                           [sg.Button('DES 2', k='des2')],
+                           [sg.Button('DES 3', k='des3')]
                        ], k='c2', element_justification='c', expand_x=True)]
                        ]
 
@@ -53,7 +53,7 @@ class HomePage():
             if self.event == 'Logout':
                 self.window_close()
 
-            if self.event == 'key1' or self.event == 'key2' or self.event == 'key3':
+            if self.event == 'des1' or self.event == 'des2' or self.event == 'des3':
 
                 des.run(self.event)
 

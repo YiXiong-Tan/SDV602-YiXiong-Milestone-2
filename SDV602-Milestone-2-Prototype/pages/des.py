@@ -4,6 +4,6 @@ from pages.DES.des_view import DESView
 
 
 def run(event):
-
-    des = DESController(DESView(event), DESModel())
+    des_model = DESModel(event)
+    des = DESController(DESView(des_model), des_model)
     des.load()

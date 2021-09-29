@@ -12,4 +12,4 @@ class FileUploadView:
              sg.B("Exit", size=(14, 1))]
         ]
 
-        self.window = sg.Window("File Upload", self.layout, finalize=True)
+        self.window = sg.Window("File Upload", self.layout, finalize=True, modal=True)

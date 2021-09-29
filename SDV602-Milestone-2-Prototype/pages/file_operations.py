@@ -19,3 +19,8 @@ def getPieChartDataFromFile(source):
     fileModel = FileModel()
     pieDataDict = fileModel.getPieChartDataFromFile(source)
     return pieDataDict
+
+def getBarChartDataFromFile(source):
+    fileModel = FileModel()
+    barGraphDict = fileModel.getBarGraphDataFromFile(source)
+    return barGraphDict

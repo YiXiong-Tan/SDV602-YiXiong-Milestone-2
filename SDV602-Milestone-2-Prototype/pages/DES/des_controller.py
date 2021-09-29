@@ -1,7 +1,8 @@
 from pages.DES.des_model import DESModel
 from pages.DES.des_view import DESView
 import PySimpleGUI as sg
-import utils.matplotlibGraphsAndCharts as plotter
+import utils.data_visuals as plotter
+import pages.file_operations as file
 
 
 class DESController:
@@ -11,43 +12,82 @@ class DESController:
         self.model = model
 
     def load(self):
-        import pages.file_operations as file
+        current_des = self.model.selected_DES   
+        
+        def updateFileHistory():
+            data_path = self.model.data_path
 
-        def updateCanvas():
+            # old filenames
+            old_filenames = sg.user_settings_get_entry(current_des+"-filenames",[])
+            
+            
+            # save filenames
+            sg.user_settings_set_entry(current_des+"-filenames", list(set(old_filenames+[data_path])))
+            sg.user_settings_set_entry(current_des+"-last-filename", data_path)
 
-            if self.model.data_path == "":
-                return
+
+        def updateCanvas(graph_type="Pie Chart"):
+            # clear canvas
+            if self.view.figure_agg != None:
+                plotter.clear_canvas(self.view.figure_agg)
+
+            if graph_type == "Pie Chart":
+
+                # dict for pie chart
+                self.model.pie_chart_dict = file.getPieChartDataFromFile(self.model.data_path)
+
+                # update canvas
+                self.view.figure_agg = plotter.pie_chart(self.view.window, self.model.pie_chart_dict)
+
+            if graph_type == "Bar Graph":
+                # TODO dict for bar chart
+                self.model.bar_chart_dict = file.getBarChartDataFromFile(self.model.data_path)
                 
-            # TODO show file name
+                # update canvas
+                self.view.figure_agg = plotter.bar_graph(self.view.window, self.model.bar_chart_dict)
 
-            # check drop down
+            if graph_type == "Map":
+                pass
 
-            # dict for pie chart
-            self.model.pieDataDict = file.getPieChartDataFromFile(
-                self.model.data_path)
+        # get last file
+        lastfile = sg.user_settings_get_entry(current_des+"-last-filename", "")    
 
-            # update canvas
-            plotter.drawPieChart(
-                self.view.window, self.model.pieDataDict)
+        # if last file exist, display data visual
+        if lastfile != "":
+            self.model.data_path = lastfile
+            updateCanvas()
+            
 
         while True:
+            # when file history is not blank, update canvas
+
             event, values = self.view.window.read()
 
             if event == sg.WIN_CLOSED or event == 'Exit':
                 break
 
-            if event == 'Merge CSV':
-                # open file upload popup
-                self.model.data_path = file.mergePopUp()
+            if event == "combo":
+                combo_value = values['combo']
 
-                # update infograph
-                updateCanvas()
+                updateCanvas(combo_value)
 
-            if event == 'Upload CSV':
-                # open file upload popup
-                self.model.data_path = file.uploadPopUp()
+            if event == 'Merge CSV' or event == 'Upload CSV':
 
-                # update infograph 
-                updateCanvas()
+                if event == 'Merge CSV':
+                    # open merge file popup
+                    self.model.data_path = file.mergePopUp()
+
+                if event == 'Upload CSV':
+                    # open upload file popup
+                    self.model.data_path = file.uploadPopUp()
+
+                if self.model.data_path != "":
+
+                    # update file history and canvas
+                    updateFileHistory()
+                    updateCanvas()
+                    
+
+                    
 
         self.view.window.close()
