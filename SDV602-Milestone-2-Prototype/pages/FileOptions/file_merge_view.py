@@ -7,9 +7,9 @@ class FileMergeView:
         self.layout = [
             [sg.Text('Merge CSV:', font=('18'))],
             [sg.Text('Merge Target:', size=(12, 1)),
-             sg.Input(key="target"), sg.FileBrowse()],
+             sg.Input(key="target"), sg.FileBrowse(file_types=(("Comma separated value", "*.csv"),))],
             [sg.Text('File to Merge:', size=(12, 1)),
-             sg.Input(key="source"), sg.FileBrowse()],
+             sg.Input(key="source"), sg.FileBrowse(file_types=(("Comma separated value", "*.csv"),))],
             [sg.B("Merge CSV", key="Merge", size=(14, 1)),
              sg.B("Exit", size=(14, 1))]
         ]

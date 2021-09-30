@@ -13,9 +13,9 @@ class FileModel:
     data_dict = []
 
     def upload(self):
-        # TODO wrap in try except
         # upload the file to local storage from source
         try:
+
             if self.source != "":
                 # get file name
                 dest_filename = os.path.basename(self.source)

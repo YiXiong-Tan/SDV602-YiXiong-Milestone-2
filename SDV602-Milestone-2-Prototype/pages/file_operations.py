@@ -16,14 +16,27 @@ def mergePopUp():
 
 
 def getPieChartDataFromFile(source):
+    pieDataDict = {}
+
+    if not sourceExist(source):
+        return pieDataDict
+
     fileModel = FileModel()
     pieDataDict = fileModel.getPieChartDataFromFile(source)
+    print(pieDataDict)
     return pieDataDict
 
+
 def getBarChartDataFromFile(source):
+    barGraphDict = {}
+
+    if not sourceExist(source):
+        return barGraphDict
+
     fileModel = FileModel()
     barGraphDict = fileModel.getBarGraphDataFromFile(source)
     return barGraphDict
+
 
 def getAcresData(source):
     fileModel = FileModel()
@@ -31,4 +44,12 @@ def getAcresData(source):
     return acresData
 
 
-# TODO get map data
+def sourceExist(source):
+    try:
+        f = open(source)
+        f.close()
+    except FileNotFoundError:
+        # remove from file history list
+        return False
+
+    return True

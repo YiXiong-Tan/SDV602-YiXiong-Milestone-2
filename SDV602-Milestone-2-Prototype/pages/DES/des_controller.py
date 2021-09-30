@@ -11,51 +11,72 @@ class DESController:
     def __init__(self, view: DESView, model: DESModel):
         self.view = view
         self.model = model
+        self.current_des = self.model.selected_DES
 
     def load(self):
-        current_des = self.model.selected_DES   
-        
+
+        # get file history from user settings
+        file_hist = sg.user_settings_get_entry(
+            self.current_des+"-filenames", [])
+
         def updateFileHistory():
             data_path = self.model.data_path
 
-            # old filenames
-            old_filenames = sg.user_settings_get_entry(current_des+"-filenames",[])
-            
-            
-            # save filenames
-            sg.user_settings_set_entry(current_des+"-filenames", list(set(old_filenames+[data_path])))
-            sg.user_settings_set_entry(current_des+"-last-filename", data_path)
-
+            # save filenames in user settings
+            sg.user_settings_set_entry(
+                self.current_des+"-filenames", list(set(file_hist+[data_path])))
+            sg.user_settings_set_entry(
+                self.current_des+"-last-filename", data_path)
 
         def updateCanvas(graph_type="Pie Chart"):
+
+            data_path = self.model.data_path
+
+            # check if file exists
+            if not file.sourceExist(data_path):
+                if data_path in list(file_hist):
+                    # remove from file history
+                    file_hist.remove(data_path)
+                    sg.user_settings_set_entry(self.current_des+"-filenames", list(set(file_hist)))
+                   
+                    # update the combo box
+                    self.view.window['file-history'].update(values=file_hist)
+                    return
+
 
             if graph_type == "Pie Chart":
 
                 # dict for pie chart
-                self.model.pie_chart_dict = file.getPieChartDataFromFile(self.model.data_path)
+                self.model.pie_chart_dict = file.getPieChartDataFromFile(
+                    self.model.data_path)
 
                 # update canvas
-                self.view.figure_agg = plotter.pie_chart(self.view.window, self.model.pie_chart_dict)
+                self.view.figure_agg = plotter.pie_chart(
+                    self.view.window, self.model.pie_chart_dict)
 
             if graph_type == "Bar Graph":
                 # dict for bar chart
-                self.model.bar_chart_dict = file.getBarChartDataFromFile(self.model.data_path)
-                
+                self.model.bar_chart_dict = file.getBarChartDataFromFile(
+                    self.model.data_path)
+
                 # update canvas
-                self.view.figure_agg = plotter.bar_graph(self.view.window, self.model.bar_chart_dict)
+                self.view.figure_agg = plotter.bar_graph(
+                    self.view.window, self.model.bar_chart_dict)
 
             if graph_type == "Highest Threshold":
-                 # dict for thresholds
-                self.model.bar_chart_dict = file.getHighestLowModerateHighThresholdData(self.model.data_path)
+                # dict for thresholds
+                self.model.bar_chart_dict = file.getAcresData(
+                    self.model.data_path)
 
         # get last file
-        lastfile = sg.user_settings_get_entry(current_des+"-last-filename", "")    
+        lastfile = sg.user_settings_get_entry(
+            self.current_des+"-last-filename", "")
 
         # if last file exist, display data visual
         if lastfile != "":
+            print("asdfasdfasdf")
             self.model.data_path = lastfile
             updateCanvas()
-            
 
         while True:
             # when file history is not blank, update canvas
@@ -69,6 +90,14 @@ class DESController:
                 combo_value = values['combo']
 
                 updateCanvas(combo_value)
+
+            if event == "Clear History":
+                # empty the settings
+                sg.user_settings_set_entry(self.current_des+"-filenames", [])
+                sg.user_settings_set_entry(self.current_des+'-last-filename', '')
+
+                # update the combo box
+                self.view.window['file-history'].update(values=[], value='')
 
             if event == "file-history":
                 self.model.data_path = values["file-history"]
@@ -85,13 +114,8 @@ class DESController:
                     self.model.data_path = file.uploadPopUp()
 
                 if self.model.data_path != "":
-
                     # update file history and canvas
                     updateFileHistory()
                     updateCanvas()
-
-            if event == 'des1' or event == 'des2' or event == 'des3':
-                self.view.window.close()
-                des.run(event)                    
 
         self.view.window.close()

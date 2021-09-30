@@ -1,5 +1,5 @@
 from typing import Text
-from PySimpleGUI.PySimpleGUI import Button
+from PySimpleGUI.PySimpleGUI import Button, Column
 from pages.DES.des_model import DESModel
 import PySimpleGUI as sg
 
@@ -42,12 +42,13 @@ class DESView:
         self.layout = [
 
             [
-
-                sg.Text("File History:"),
-                sg.Combo(sorted_file_history_list, key="file-history",
-                         size=(50, 1), enable_events=True, default_value=last_selected_file),
-                sg.Button('Upload CSV'), sg.Button('Merge CSV'),
-                sg.Button('Exit')
+                sg.Column([
+                    [sg.Text("File History:"),
+                     sg.Combo(sorted_file_history_list, key="file-history",
+                              size=(50, 1), enable_events=True, default_value=last_selected_file),
+                     sg.Button("Clear History"),
+                     sg.Button('Upload CSV'), sg.Button('Merge CSV')]], justification='l', expand_x=True),
+                sg.Column([[sg.Button('Exit')]], justification='r'),
             ],
             [
                 sg.Column([
