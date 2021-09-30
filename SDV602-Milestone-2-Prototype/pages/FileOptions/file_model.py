@@ -1,8 +1,7 @@
 import os
 import shutil
-import glob
 import csv
-
+from datetime import datetime
 
 class FileModel:
     des_selected = ""
@@ -12,7 +11,6 @@ class FileModel:
         os.path.abspath("data"))+"\\data\\")
     dest = ""
     data_dict = []
-
 
     def upload(self):
         # TODO wrap in try except
@@ -30,7 +28,6 @@ class FileModel:
 
         except Exception as e:
             print(e)
-
 
     def merge(self):
 
@@ -83,7 +80,6 @@ class FileModel:
         except Exception as e:
             print(e)
 
-
     def getPieChartDataFromFile(self, source):
         pieDict = {}
 
@@ -100,26 +96,21 @@ class FileModel:
 
         return pieDict
 
+    
 
     def getBarGraphDataFromFile(self, source):
-        from datetime import datetime
-
+        
         barDict = {}
         # read csv file
         with open(source, newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                date = row['IG_DATE']
-                if date != "":
+                date_str = row['IG_DATE']
+                if date_str != "":
 
-                    # remove the +00 at the back of the date
-                    date_time_str = date.split("+")[0]
+                    date_time_obj = getdatetimeObj(date_str)
 
-                    # break down the date
-                    date_time_obj = datetime.strptime(
-                        date_time_str, '%Y/%m/%d %H:%M:%S')
-
-                    # combine year and month eg. 01/2015
+                        # combine year and month eg. 01/2015
                     month_year = str(date_time_obj.month) + \
                         "/"+str(date_time_obj.year)
 
@@ -135,3 +126,37 @@ class FileModel:
                         sorted_bar_dict[i] = barDict[i]
 
         return sorted_bar_dict
+
+    
+    def getAcresData(self,source):
+        data_dict = {}
+        with open(source, newline="") as csvfile:
+            reader = csv.DictReader(csvfile)
+            ranges = [(), ]
+
+            for row in reader:
+                row['ACRES']
+                
+                
+
+
+                    
+
+def getdatetimeObj(date_str):
+    # remove the +00 at the back of the date
+    date_time_str = date_str.split("+")[0]
+
+    # break down the date
+    date_time_obj = datetime
+
+    # Dates in different files have different format
+    # try '%Y/%m/%d %H:%M:%S' format and '%Y%m%d' format to cater for 2 different formats
+    try:
+        date_time_obj = datetime.strptime(
+            date_time_str, '%Y/%m/%d %H:%M:%S')
+    except ValueError as ve:
+        date_time_obj = datetime.strptime(
+            date_time_str, '%Y%m%d'
+        )
+    
+    return date_time_obj

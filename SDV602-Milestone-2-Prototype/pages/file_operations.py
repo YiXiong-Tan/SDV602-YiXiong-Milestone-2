@@ -24,3 +24,11 @@ def getBarChartDataFromFile(source):
     fileModel = FileModel()
     barGraphDict = fileModel.getBarGraphDataFromFile(source)
     return barGraphDict
+
+def getAcresData(source):
+    fileModel = FileModel()
+    acresData = fileModel.getAcresData(source)
+    return acresData
+
+
+# TODO get map data

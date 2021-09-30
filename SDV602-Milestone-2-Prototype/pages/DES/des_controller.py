@@ -3,6 +3,7 @@ from pages.DES.des_view import DESView
 import PySimpleGUI as sg
 import utils.data_visuals as plotter
 import pages.file_operations as file
+import pages.des as des
 
 
 class DESController:
@@ -27,9 +28,6 @@ class DESController:
 
 
         def updateCanvas(graph_type="Pie Chart"):
-            # clear canvas
-            if self.view.figure_agg != None:
-                plotter.clear_canvas(self.view.figure_agg)
 
             if graph_type == "Pie Chart":
 
@@ -40,14 +38,15 @@ class DESController:
                 self.view.figure_agg = plotter.pie_chart(self.view.window, self.model.pie_chart_dict)
 
             if graph_type == "Bar Graph":
-                # TODO dict for bar chart
+                # dict for bar chart
                 self.model.bar_chart_dict = file.getBarChartDataFromFile(self.model.data_path)
                 
                 # update canvas
                 self.view.figure_agg = plotter.bar_graph(self.view.window, self.model.bar_chart_dict)
 
-            if graph_type == "Map":
-                pass
+            if graph_type == "Highest Threshold":
+                 # dict for thresholds
+                self.model.bar_chart_dict = file.getHighestLowModerateHighThresholdData(self.model.data_path)
 
         # get last file
         lastfile = sg.user_settings_get_entry(current_des+"-last-filename", "")    
@@ -71,6 +70,10 @@ class DESController:
 
                 updateCanvas(combo_value)
 
+            if event == "file-history":
+                self.model.data_path = values["file-history"]
+                updateCanvas()
+
             if event == 'Merge CSV' or event == 'Upload CSV':
 
                 if event == 'Merge CSV':
@@ -86,8 +89,9 @@ class DESController:
                     # update file history and canvas
                     updateFileHistory()
                     updateCanvas()
-                    
 
-                    
+            if event == 'des1' or event == 'des2' or event == 'des3':
+                self.view.window.close()
+                des.run(event)                    
 
         self.view.window.close()
