@@ -7,7 +7,7 @@ class FileUploadView:
         self.layout = [
             [sg.Text('File Upload:', font=('18'))],
             [sg.Text('Upload file path:', size=(12, 1)),
-             sg.Input(key="source"), sg.FileBrowse()],
+             sg.Input(key="source"), sg.FileBrowse(file_types=(("Comma separated value", "*.csv"),))],
             [sg.B("Upload CSV", key="Upload", size=(14, 1)),
              sg.B("Exit", size=(14, 1))]
         ]
