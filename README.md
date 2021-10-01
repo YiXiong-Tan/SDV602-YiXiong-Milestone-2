@@ -1,5 +1,5 @@
 # Running the application
 
-1. Open your command prompt where all the files are.
-2. Run "python login.py" in your cmd
+1. Open command prompt to project root path.
+2. Run "python app.py" in cmd
 
