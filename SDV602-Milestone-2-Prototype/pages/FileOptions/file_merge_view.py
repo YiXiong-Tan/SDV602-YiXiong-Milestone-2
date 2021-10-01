@@ -3,7 +3,10 @@ from PySimpleGUI.PySimpleGUI import Column
 
 
 class FileMergeView:
+    """View for merge files"""
+
     def __init__(self):
+        """Initializes the layout and window used"""
         self.layout = [
             [sg.Text('Merge CSV:', font=('18'))],
             [sg.Text('Merge Target:', size=(12, 1)),

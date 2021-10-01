@@ -5,13 +5,25 @@ import PySimpleGUI as sg
 
 
 class FileMergeController:
+    """Controller for merging files"""
 
     def __init__(self, view: FileMergeView, model: FileModel):
+        """
+        Initializes the controller
+        Args:
+            FileMergeView - consists of the layout and window
+            FileModel - consists of data from the view needed in the controller
+        """
         self.view = view
         self.model = model
 
     def load(self):
+        """
+        Load the controller and handle events from the FileMergeView
 
+        Return:
+            path to uploaded file
+        """
         while True:
             event, values = self.view.window.read()
             
@@ -21,7 +33,7 @@ class FileMergeController:
             if event == "Merge":
                 choice = sg.PopupOKCancel("Confirm merge?")
                 if choice == "OK":
-                    # TODO merge the files
+                    
                     self.model.source = values["source"]
                     self.model.target = values["target"]
 

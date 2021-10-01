@@ -1,4 +1,9 @@
+"""
+All the error handling should be stored here.
+"""
 class Error:
+    """The Error Class"""
+    
     def displayMessages(window,messages=['']):
         """
         Display messages based on the window

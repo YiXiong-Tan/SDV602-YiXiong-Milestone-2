@@ -1,24 +1,41 @@
+"""
+The home page will consists of the layout, event handlers and routes
+
+Why this is in one file?
+Because this is not a very huge file, the reason is to make finding things easier
+"""
+
 import PySimpleGUI as sg
 from PySimpleGUI.PySimpleGUI import WIN_CLOSED
 
 
 class HomePage():
+    """
+    The home page class will initialize a home page with the username supplied
+
+    Args:
+        username: The name to be displayed on the home screen
+    """
 
     def __init__(self, username):
         """
-        This is the home window.
-        Navigation to the data explorer screen happens here.
-        Can also add a new csv file here.
+        This function initializes the home page.
 
-        Args:
-            credentials (dict): 'username':<username>,'password':<password>
+        The number of DESes can be configured here.
+        Configure the des:
+            eg. {"desname":"actual name of DES", 
+            "previous": "*specify the des when the previous button is clicked*", 
+            "next": "*specify the des when the previous button is clicked*"}
+        
+        After configuring the DES, the des controller will make use of this dictionary to determine the previous page
+        and next page.
         """
         self.username = username
 
         # setup the navs and buttons of DESes
-        des_dict = {"des1": {"name": "DES 1", "next": "des2"}, 
-                    "des2": {"name": "DES 2", "previous": "des1", "next": "des3"}, 
-                    "des3": {"name": "DES 3", "previous":"des2"}}
+        des_dict = {"des1": {"name": "DES 1", "previous": "des3", "next": "des2"},
+                    "des2": {"name": "DES 2", "previous": "des1", "next": "des3"},
+                    "des3": {"name": "DES 3", "previous": "des2", "next": "des1"}}
         sg.user_settings_set_entry("DESes", des_dict)
 
         # construct the buttons
@@ -45,13 +62,17 @@ class HomePage():
         Args:
             home_window (obj): the home window
         """
+        # reset DESes
+        sg.user_settings_set_entry("DESes", "")
         self.window.close()
 
-        from pages.login import LoginPage
-        login = LoginPage()
-        login.load()
 
     def load(self):
+        """
+        This function will load the current page.
+
+        The event handlers will handler the events from the layout
+        """
         import pages.des as des
 
         while True:

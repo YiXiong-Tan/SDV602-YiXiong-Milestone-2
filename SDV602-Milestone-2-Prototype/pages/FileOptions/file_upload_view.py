@@ -1,9 +1,21 @@
+"""
+File upload layout
+"""
 import PySimpleGUI as sg
 from PySimpleGUI.PySimpleGUI import Column
 
 
 class FileUploadView:
+    """
+    FileUploadView class
+    Create an FileUploadView object to get a FileUploadView layout.
+    """
+    
     def __init__(self):
+        """
+        Initializes the class
+        Sets layout and window to self.
+        """    
         self.layout = [
             [sg.Text('File Upload:', font=('18'))],
             [sg.Text('Upload file path:', size=(12, 1)),

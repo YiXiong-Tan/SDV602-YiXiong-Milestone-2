@@ -1,9 +1,24 @@
+"""
+A model that manages the data required by the File View and Controller
+Both the file upload and merge will share this model
+
+"""
 import os
 import shutil
 import csv
 from datetime import datetime
 
 class FileModel:
+    """
+    The file model does not to be initialized.
+    Besides performing the file operations below:
+    - upload file
+    - merge file
+    - get pie chart data
+    - get bar graph data
+    - get acres affected by fire data
+    """
+    
     des_selected = ""
     source = ""
     target = ""
@@ -13,7 +28,7 @@ class FileModel:
     data_dict = []
 
     def upload(self):
-        # upload the file to local storage from source
+        """Upload the file to project source"""
         try:
 
             if self.source != "":
@@ -30,10 +45,21 @@ class FileModel:
             print(e)
 
     def merge(self):
-
+        """Merge files from source to target file"""
         try:
             # read csv files with the source supplied
             def readCSVFile(path, isTargetFile):
+                """
+                Embedded function used to read the csv file
+
+                Arg:
+                    Path - the path to file
+                    isTargetFile - To determine whether to use keep the header of 
+                                    the csv file in the newly merged file.
+                
+                Returns:
+                    header and the csv data
+                """
                 with open(path) as csvfile:
                     header = []
                     lines = []
@@ -81,6 +107,16 @@ class FileModel:
             print(e)
 
     def getPieChartDataFromFile(self, source):
+        """
+        Process the pie chart data from the "Fire type" column of the source.
+        Counts the number of fire types
+
+        Args:
+            source - path to the file
+        
+        Returns:
+            a dictionary that consist the data for the pie chart
+        """
         pieDict = {}
 
         # read file
@@ -99,6 +135,15 @@ class FileModel:
     
 
     def getBarGraphDataFromFile(self, source):
+        """
+        Process the IG_DATE column from the source 
+
+        Args:
+            source - path to the file
+        
+        Returns:
+            sorted - bar chart dictionary
+        """
         
         barDict = {}
         # read csv file
@@ -129,20 +174,74 @@ class FileModel:
 
     
     def getAcresData(self,source):
+        """
+        Group the Acres column into ranges from the file source
+
+        Args:
+            source - path to the file
+        
+        Return:
+            Dictionary of ranges of acres affected by fire
+        """
+        
         data_dict = {}
         with open(source, newline="") as csvfile:
             reader = csv.DictReader(csvfile)
-            ranges = [(), ]
+            ranges = {}
 
             for row in reader:
-                row['ACRES']
-                
-                
+                acres = int(row['ACRES'])
 
+                # range < 1200
+                if acres < 1201:
+                    range_key = '< 1200'
+                    if range_key in ranges.keys():
+                        ranges[range_key] += 1
+                    else:
+                        ranges[range_key] = 1
 
-                    
+                # range between 1201-2000
+                if acres > 1200 and acres < 2001:
+                    range_key = '1201 - 2000'
+                    if range_key in ranges.keys():
+                        ranges[range_key] += 1
+                    else:
+                        ranges[range_key] = 1
+
+                # range between 2001-3500
+                if acres > 2000 and acres < 3501:
+                    range_key = '2001 - 3500'
+                    if range_key in ranges.keys():
+                        ranges[range_key] += 1
+                    else:
+                        ranges[range_key] = 1
+
+                # range between 3501-7000 
+                if acres > 3500 and acres < 7001:
+                    range_key = '3501 - 7000'
+                    if range_key in ranges.keys():
+                        ranges[range_key] += 1
+                    else:
+                        ranges[range_key] = 1
+
+                # range > 7000
+                if acres > 7000:
+                    range_key = '< 1200'
+                    if range_key in ranges.keys():
+                        ranges[range_key] += 1
+                    else:
+                        ranges[range_key] = 1
+
+            return ranges
+               
 
 def getdatetimeObj(date_str):
+    """
+    Get the date time obj from the file.
+    Since the file might have 2 different date formats,
+    this function will cater for that.
+    """
+
     # remove the +00 at the back of the date
     date_time_str = date_str.split("+")[0]
 
